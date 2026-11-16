@@ -22,21 +22,14 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
 
-    /**
-     * Adds money to a wallet and records it in the history.
-     * Both steps are in one transaction: either both happen or neither does.
-     */
+
     @Transactional
     public WalletResponse deposit(DepositRequest request) {
-        // 1. Load the wallet WITH a row lock so concurrent deposits cannot overwrite each other.
         Wallet wallet = walletRepository.findByIdForUpdate(request.walletId())
                 .orElseThrow(() -> new WalletNotFoundException(request.walletId()));
 
-        // 2. Increase the balance. BigDecimal is immutable, so add() returns a new value.
-        //    Hibernate notices the change ("dirty checking") and runs the UPDATE at commit.
         wallet.setBalance(wallet.getBalance().add(request.amount()));
 
-        // 3. Save a history record. Sender is null because the money comes from outside.
         transactionRepository.save(Transaction.builder()
                 .senderWalletId(null)
                 .receiverWalletId(wallet.getId())
@@ -56,7 +49,6 @@ public class WalletService {
 
     @Transactional(readOnly = true)
     public List<TransactionResponse> getTransactionHistory(Long walletId) {
-        // Return 404 for an unknown wallet instead of a misleading empty list.
         if (!walletRepository.existsById(walletId)) {
             throw new WalletNotFoundException(walletId);
         }

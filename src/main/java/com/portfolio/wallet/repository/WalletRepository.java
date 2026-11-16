@@ -11,8 +11,6 @@ import java.util.Optional;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
-    // "SELECT ... FOR UPDATE": locks the row until our transaction ends, so two
-    // simultaneous requests cannot both read the same balance and overwrite each other.
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select w from Wallet w where w.id = :id")
     Optional<Wallet> findByIdForUpdate(@Param("id") Long id);

@@ -7,8 +7,8 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create-drop   # schema is rebuilt on each start (dev only)
-    open-in-view: false       # we map entities to DTOs inside the service layer
+      ddl-auto: create-drop
+    open-in-view: false
   h2:
     console:
-      enabled: true           # http://localhost:8080/h2-console
+      enabled: true

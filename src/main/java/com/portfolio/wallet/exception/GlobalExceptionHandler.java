@@ -13,7 +13,6 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// @RestControllerAdvice = @ControllerAdvice + @ResponseBody (returns JSON).
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -28,7 +27,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, ex.getMessage(), null);
     }
 
-    // Business-rule violations: the request is well-formed but cannot be processed.
     @ExceptionHandler({
             InsufficientBalanceException.class,
             CurrencyMismatchException.class,
@@ -37,7 +35,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null);
     }
 
-    // @Valid failed on a request body.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
@@ -48,14 +45,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
 
-    // Malformed JSON, or an invalid enum value such as currency = "ABC".
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleUnreadable(HttpMessageNotReadableException ex) {
         return build(HttpStatus.BAD_REQUEST,
                 "Malformed request body (check JSON syntax and enum values like currency)", null);
     }
 
-    // Safety net: log the real error, but never leak internals to the client.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex) {
         log.error("Unexpected error", ex);

@@ -8,7 +8,7 @@ import java.time.Instant;
 
 public record TransactionResponse(
         Long id,
-        Long senderWalletId,   // null for deposits
+        Long senderWalletId,
         Long receiverWalletId,
         BigDecimal amount,
         TransactionStatus status,

@@ -19,8 +19,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // null sender = this was a deposit (money came from outside the system).
-    // These are plain ids, not foreign keys, so a FAILED record can always be saved.
+
     @Column(name = "sender_wallet_id")
     private Long senderWalletId;
 

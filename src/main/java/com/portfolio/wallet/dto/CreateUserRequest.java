@@ -17,7 +17,6 @@ public record CreateUserRequest(
         @NotNull(message = "Currency is required (AZN, USD, EUR)")
         Currency currency,
 
-        // Optional starting balance. If omitted, the wallet starts at 0.
         @PositiveOrZero(message = "Initial balance cannot be negative")
         @Digits(integer = 15, fraction = 2, message = "Max 2 decimal places")
         BigDecimal initialBalance

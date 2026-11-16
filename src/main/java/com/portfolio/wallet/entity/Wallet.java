@@ -15,12 +15,10 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // One user has exactly one wallet (unique = true enforces it in the database).
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    // Always BigDecimal for money, never double/float.
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
 
