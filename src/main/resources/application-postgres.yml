@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/walletdb
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update        # for a real project, switch to Flyway migrations
+  h2:
+    console:
+      enabled: false
